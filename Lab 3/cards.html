@@ -1,0 +1,150 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      h1 {
+        padding: 0 10px;
+      }
+
+      .card {
+        padding: 10px;
+      }
+      .card-title {
+        font-weight: 600;
+        font-size: 3em;
+        padding: 0 0 10px 0;
+      }
+      .card-text {
+        font-weight: 400;
+        font-size: 2em;
+      }
+
+      .artist {
+        padding: 10px;
+      }
+      .artist-name {
+        font-weight: 600;
+        font-size: 3em;
+        margin: 0 0 10px 0;
+      }
+      .portfolio {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .portfolio-card {
+        width: 250px;
+      }
+      .portfolio-image {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+      }
+      .portfolio-title {
+        font-size: 1.5em;
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <template id="card-template">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title"></div>
+          <div class="card-text"></div>
+        </div>
+      </div>
+    </template>
+
+    <template id="artist-template">
+      <div class="artist">
+        <h2 class="artist-name"></h2>
+        <div class="portfolio"></div>
+      </div>
+    </template>
+
+    <template id="portfolio-card-template">
+      <div class="portfolio-card">
+        <img class="portfolio-image" alt="" />
+        <div class="portfolio-title"></div>
+      </div>
+    </template>
+
+    <div id="card-list"></div>
+
+    <h1>Artists</h1>
+    <div id="artist-list"></div>
+
+    <script>
+      function addCard(title, text) {
+        const template = document
+          .getElementById("card-template")
+          .content.cloneNode(true);
+        template.querySelector(".card-title").innerText = title;
+        template.querySelector(".card-text").innerText = text;
+        document.querySelector("#card-list").appendChild(template);
+      }
+
+      addCard("My Card Title", "lorem ipsum ble bla");
+      addCard("Second Card", "Different content this time");
+      addCard("Third Card", "Same function, new text");
+
+      const data = [
+        { name: "bob", age: 23 },
+        { name: "alice", age: 39 },
+      ];
+
+      data.forEach(function (person) {
+        addCard(person.name, person.age);
+      });
+
+      function addPortfolioCard(item, portfolioContainer) {
+        const card = document
+          .getElementById("portfolio-card-template")
+          .content.cloneNode(true);
+        card.querySelector(".portfolio-title").innerText = item.title;
+        const img = card.querySelector(".portfolio-image");
+        img.src = item.url;
+        img.alt = item.title;
+        portfolioContainer.appendChild(card);
+      }
+
+      function addArtist(artist) {
+        const profile = document
+          .getElementById("artist-template")
+          .content.cloneNode(true);
+        profile.querySelector(".artist-name").innerText = artist.name;
+
+        const portfolioContainer = profile.querySelector(".portfolio");
+        artist.portfolio.forEach(function (item) {
+          addPortfolioCard(item, portfolioContainer);
+        });
+
+        document.querySelector("#artist-list").appendChild(profile);
+      }
+
+      const artists = [
+        {
+          name: "Van Gogh",
+          portfolio: [
+            {
+              title: "portrait",
+              url: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/436532/1671316/main-image",
+            },
+            {
+              title: "sky",
+              url: "https://mymodernmet.com/wp/wp-content/uploads/2020/11/White-house-night-van-goh-worldwide-2.jpg",
+            },
+          ],
+        },
+      ];
+
+      artists.forEach(function (a) {
+        addArtist(a);
+      });
+    </script>
+  </body>
+</html>
