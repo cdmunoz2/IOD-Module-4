@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Website</title>
+  </head>
+
+  <body>
+    <h1>Latest News</h1>
+
+    <input type="text" id="news-title-input" placeholder="Title" />
+    <input type="text" id="news-content-input" placeholder="Content" />
+    <button type="button" onclick="addNews()">Add News</button>
+
+    <button type="button" id="stop-button">Stop Refreshing</button>
+
+    <template id="news-template">
+      <div class="news-item">
+        <h2 class="news-title"></h2>
+        <p class="news-content"></p>
+      </div>
+    </template>
+
+    <div id="news-container"></div>
+
+    <script>
+      let news = [
+        {
+          id: 1,
+          title: "Election Results",
+          content: "Newly elected minister...",
+        },
+        { id: 2, title: "Sporting Success", content: "World Cup winners..." },
+        {
+          id: 3,
+          title: "Tornado Warning",
+          content: "Residents should prepare...",
+        },
+      ];
+
+      function addNewsItem(article) {
+        const template = document
+          .getElementById("news-template")
+          .content.cloneNode(true);
+        template.querySelector(".news-title").innerText = article.title;
+        template.querySelector(".news-content").innerText = article.content;
+        document.querySelector("#news-container").appendChild(template);
+      }
+
+      function renderNews() {
+        const container = document.querySelector("#news-container");
+        container.innerHTML = "";
+
+        news.forEach(function (article) {
+          addNewsItem(article);
+        });
+
+        console.log("news refreshed");
+      }
+
+      function addNews() {
+        const titleInput = document.querySelector("#news-title-input");
+        const contentInput = document.querySelector("#news-content-input");
+
+        if (
+          titleInput.value.trim() === "" ||
+          contentInput.value.trim() === ""
+        ) {
+          return;
+        }
+
+        news.push({
+          id: news.length + 1,
+          title: titleInput.value,
+          content: contentInput.value,
+        });
+
+        titleInput.value = "";
+        contentInput.value = "";
+      }
+
+      renderNews();
+      const refreshTimer = setInterval(renderNews, 5000);
+
+      const stopButton = document.querySelector("#stop-button");
+
+      stopButton.addEventListener("click", function () {
+        clearInterval(refreshTimer);
+        stopButton.innerText = "Refreshing stopped";
+      });
+    </script>
+  </body>
+</html>
