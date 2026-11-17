@@ -1,0 +1,56 @@
+<!------------------------- Lab 8 Luxon Dates Exercise ------------------------->
+<html>
+  <head>
+    <title>Luxon DateTime Formatting</title>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js"></script>
+  </head>
+
+  <body>
+    <h2>Lab 8 - Luxon Dates</h2>
+    <p id="birthday-days-result"></p>
+    <p id="birthday-ymd-result"></p>
+    <p id="closest-result"></p>
+    <p id="order-result"></p>
+    <p id="london-time"></p>
+
+    <script>
+      const DateTime = luxon.DateTime;
+      const birthdate = DateTime.local(1990, 1, 2);
+      const today = DateTime.now().startOf("day");
+      const days = today.diff(birthdate, "days").days;
+      const londonTime = DateTime.now().setZone("Europe/London");
+
+      const diff = today.diff(birthdate, ["years", "months", "days"]);
+
+      const dateA = DateTime.local(2000, 1, 1);
+      const dateB = DateTime.local(2026, 1, 1);
+
+      const distanceA = Math.abs(dateA.diff(today, "days").days);
+      const distanceB = Math.abs(dateB.diff(today, "days").days);
+      const closest = distanceA < distanceB ? dateA : dateB;
+
+      let message;
+
+      if (dateA < dateB) {
+        message = "The first date is before the second date.";
+      } else if (dateA > dateB) {
+        message = "The first date is after the second date.";
+      }
+
+      document.querySelector("#birthday-days-result").innerText =
+        `1) Number of days between my birthday and current date: ${days.toLocaleString()} days.`;
+
+      document.querySelector("#birthday-ymd-result").innerText =
+        `2) Number of years, months and days from my birthday to current date: ${diff.years} years, ${diff.months} months, and ${diff.days} days.`;
+
+      document.querySelector("#closest-result").innerText =
+        `3) Closest date to today between 1/1/2000 and 1/1/2026 is: ${closest.toLocaleString(DateTime.DATE_FULL)}.`;
+
+      document.querySelector("#order-result").innerText =
+        `4) In comparing these 2 dates: 1/1/2000 and 1/1/2026. ${message}`;
+
+      document.querySelector("#london-time").innerText =
+        `5) The current time in London is ${londonTime.toFormat("h:mm a")}.`;
+    </script>
+  </body>
+</html>
