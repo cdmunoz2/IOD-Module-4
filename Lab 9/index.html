@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>eCharts</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div id="main" style="width: 900px; height: 600px"></div>
+    <script type="text/javascript">
+      let options = {
+        title: { text: "Fake Store Categories" },
+        tooltip: {},
+        xAxis: {
+          data: [],
+        },
+        yAxis: {},
+        series: [
+          {
+            name: "# products",
+            type: "bar",
+            data: [],
+          },
+        ],
+      };
+      fetch("https://fakestoreapi.com/products")
+        .then((response) => response.json())
+        .then((json) => {
+          const counts = {};
+
+          json.forEach(function (product) {
+            if (counts[product.category] === undefined) {
+              counts[product.category] = 1;
+            } else {
+              counts[product.category] = counts[product.category] + 1;
+            }
+          });
+          options.xAxis.data = Object.keys(counts);
+          options.series[0].data = Object.values(counts);
+        })
+        .then(() => {
+          myChart.setOption(options);
+        });
+      let myChart = echarts.init(document.getElementById("main"));
+    </script>
+  </body>
+</html>
